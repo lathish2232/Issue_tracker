@@ -1,6 +1,6 @@
 # Issue_tracker
 -----------------------using python and SQLlite DB created issue tracker --------------------
-endpoint:-1[POST]
+1.endpoint:-1[POST]
 http://127.0.0.1:2232/addissue
 payload:-
 {"issueName":"issue 1",
@@ -12,6 +12,6 @@ payload:-
 "stakeHolder":"Ravi"}
 
 
-endpoint:-2[DELETE]
+2.endpoint:-2[DELETE]
 http://127.0.0.1:2232/clearissue
 note:-no payload is required it will delete all issues one shot 
