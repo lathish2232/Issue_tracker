@@ -2,10 +2,12 @@ import os
 import sqlite3
 import json
 
+from platform import system
 from flask import Flask
 from flask import request,Response
 from flask_restplus import Api
 from flask import g
+
 
  
 
@@ -13,8 +15,11 @@ app = Flask(__name__)
 api = Api(app)
 
 
+if system()=='Windows':
+    DATABASE ='C:/Users/admin/Desktop/Unificater_dev/Ramu/IssueTracker/sqllite_db.db'
+elif system()=='Linux':
+    DATABASE ='/home/brituser/Issue_tracker/IssueTracker/sqllite_db.db'
 
-DATABASE ='C:/Users/admin/Desktop/Unificater_dev/Ramu/IssueTracker/sqllite_db.db'
 def db_conn():
     db = getattr(g, '_database', None)
     if db is None:
@@ -45,8 +50,8 @@ def create_issue():
             sql_cursor.execute(f'''insert into PROD_ISSUE_TRACKER
                             (issueName,startDate,endDate,issuedetails,resolutionDetails,category,stakeHolder)
                             values
-                            {d.get('issueName'),d.get('startDate'),d.get('endDate'),d.get('issuedetails'),
-                            d.get('resolutionDetails'),d.get('category'),d.get('stakeHolder')}''')
+                            {d['issueName'],d['startDate'],d['endDate'],d['issuedetails'],
+                            d['resolutionDetails'],d['category'],d['stakeHolder']}''')
             
             db_conn().commit()
             sql_cursor.execute("SELECT * From PROD_ISSUE_TRACKER")
@@ -75,7 +80,6 @@ def drop_items():
         return Response(json.dumps(data))
     finally:
         close_connection
-
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 2232))
