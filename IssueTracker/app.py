@@ -43,10 +43,7 @@ def create_issue():
     try:
         if request.method=='POST':
             d= request.get_json()
-            #d= request.data
-            db_conn().row_factory=dict_factory
             sql_cursor=db_conn().cursor()
-
             sql_cursor.execute(f'''insert into PROD_ISSUE_TRACKER
                             (issueName,startDate,endDate,issuedetails,resolutionDetails,category,stakeHolder)
                             values
@@ -54,12 +51,27 @@ def create_issue():
                             d['resolutionDetails'],d['category'],d['stakeHolder']}''')
             
             db_conn().commit()
+            data ={f'status':200,'message':'successful','data':'Issue created Successfully' }
+            return json.dumps(data)
+    except Exception as ex:
+        data ={'status':400,'message':'error','data':str(ex)}
+        return Response(json.dumps(data))
+    finally:
+        close_connection
+
+@app.route('/issues',methods = ['GET'])
+def select_issues():
+    try:
+        if request.method=='GET':
+            db_conn().row_factory=dict_factory
+            sql_cursor=db_conn().cursor()
             sql_cursor.execute("SELECT * From PROD_ISSUE_TRACKER")
             data ={'status':200,'message':'successful','data':sql_cursor.fetchall()}
             return json.dumps(data)
     except Exception as ex:
         data ={'status':400,'message':'error','data':str(ex)}
         return Response(json.dumps(data))
+
     finally:
         close_connection
 
